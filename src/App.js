@@ -1,19 +1,15 @@
 import './App.css';
-import {Route, MemoryRouter, Routes} from "react-router";
+import {Route, BrowserRouter, Routes} from "react-router-dom";
+import Login from "./login/Login";
 
 function App() {
 	return (
 		<div className="App">
-			<MemoryRouter>
+			<BrowserRouter>
 				<Routes>
-					<Route path="/">
-						{ /* Add home component here */}
-					</Route>
-					<Route path="/login">
-						{ /* Add login component here */}
-					</Route>
+					<Route path="/" element={<Login/>}/>
 				</Routes>
-			</MemoryRouter>
+			</BrowserRouter>
 		</div>
 	);
 }
