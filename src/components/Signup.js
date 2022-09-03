@@ -22,6 +22,10 @@ export default function Signup() {
 			return setError("Passwords do not match")
 		}
 
+		if (passwordRef.current.value.length < 7){
+			return setError("Password must be longer than 6 characters.")
+		}
+
 		try {
 			setError("")
 			setLoading(true)
@@ -42,7 +46,6 @@ export default function Signup() {
 			<Card>
 				<Card.Body>
 					<h2 className="text-center mb-4">Sign Up</h2>
-					{error && <Alert variant="danger">{error}</Alert>}
 					<Form onSubmit={handleSubmit}>
 						<Form.Group id="firstname">
 							<Form.Label>First Name</Form.Label>
@@ -68,6 +71,7 @@ export default function Signup() {
 							<Form.Label>Profile Picture</Form.Label>
 							<Form.Control type="file" ref={fileRef} required/>
 						</Form.Group>
+						{error && <Alert variant="danger">{error}</Alert>}
 						<Button disabled={loading} className="w-100" type="submit">
 							Sign Up
 						</Button>
