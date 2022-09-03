@@ -18,8 +18,6 @@ export default function Dashboard() {
 		}
 	}
 
-	console.log(currentUser.photoURL)
-
 	return (
 		<>
 			<Card>
