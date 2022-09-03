@@ -1,3 +1,11 @@
+# WalkWithMe
+
+## Stack
+- React
+- ReactRouter v6 (Routing)
+- MaterialUI (Visual Components)
+- Firebase (Database Stuff)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
