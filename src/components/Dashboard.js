@@ -1,16 +1,13 @@
 import React, {useState} from "react"
-import {Alert, Button, Card, Form} from "react-bootstrap"
+import {Button, Card} from "react-bootstrap"
 import {useAuth} from "../contexts/AuthContext"
-import {Link, useHistory} from "react-router-dom"
+import {useHistory} from "react-router-dom"
 import Header from "./Header"
 
 export default function Dashboard() {
 	const [error, setError] = useState("")
 	const {currentUser, logout} = useAuth()
 	const history = useHistory()
-
-	const directionsService = new window.google.maps.DirectionsService()
-	directionsService.route()
 
 	async function handleLogout() {
 		setError("")
@@ -24,10 +21,10 @@ export default function Dashboard() {
 
 	return (
 		<div className="mainpage">
-			<Header />
+			<Header/>
 			{/* Have MULTIPLE cards over here */}
 			<Card>
-				<Card.Img variant="top" src="" />
+				<Card.Img variant="top" src=""/>
 				<Card.Body>
 					<Card.Title>Trip With John Smith</Card.Title>
 					<Card.Text>On Dec 7 1969 at 4:20pm</Card.Text>
@@ -35,7 +32,7 @@ export default function Dashboard() {
 			</Card>
 
 			<Card>
-				<Card.Img variant="top" src="" />
+				<Card.Img variant="top" src=""/>
 				<Card.Body>
 					<Card.Title>Trip With John Smith</Card.Title>
 					<Card.Text>On Dec 7 1969 at 4:20pm</Card.Text>

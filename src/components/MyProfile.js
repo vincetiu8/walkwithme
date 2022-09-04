@@ -31,17 +31,17 @@ export default function Dashboard() {
 						</div>
 						<div className="row">
 							<div className="col text-center mb-2">
-								<img alt="profile" src={currentUser.photoURL} className="img-thumbnail" style={{"width": "200px", "height": "200px", "objectFit": "cover"}}/>
+								<img alt="profile" src={currentUser.photo_url} className="img-thumbnail" style={{"width": "200px", "height": "200px", "objectFit": "cover"}}/>
 							</div>
 						</div>
 						<div className="row">
 							<div className="col">
-								<strong>Name:</strong> {currentUser.displayName}
+								<strong>Name:</strong> {currentUser.name}
 							</div>
 						</div>
 						<div className="row">
 							<div className="col">
-								<strong>Email:</strong> {currentUser.email}
+								<strong>Email:</strong> {currentUser.username}
 							</div>
 						</div>
 						<div className="row">

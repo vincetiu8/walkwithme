@@ -6,7 +6,7 @@ import {Link, useHistory} from "react-router-dom"
 export default function Signup() {
 	const firstnameRef = useRef()
 	const lastnameRef = useRef()
-	const emailRef = useRef()
+	const usernameRef = useRef()
 	const passwordRef = useRef()
 	const passwordConfirmRef = useRef()
 	const fileRef = useRef()
@@ -29,9 +29,7 @@ export default function Signup() {
 		try {
 			setError("")
 			setLoading(true)
-			await signup(emailRef.current.value, passwordRef.current.value)
-			await updateUserName(firstnameRef.current.value + " " + lastnameRef.current.value)
-			await updateUserImage(fileRef.current.files[0])
+			await signup(usernameRef.current.value, passwordRef.current.value, firstnameRef.current.value + " " + lastnameRef.current.value, fileRef.current.files[0])
 			history.push("/")
 		} catch (e) {
 			console.log(e)
@@ -51,13 +49,13 @@ export default function Signup() {
 							<Form.Label>First Name</Form.Label>
 							<Form.Control type="text" ref={firstnameRef} required/>
 						</Form.Group>
-						<Form.Group id="email">
+						<Form.Group id="lastname">
 							<Form.Label>Last Name</Form.Label>
 							<Form.Control type="text" ref={lastnameRef} required/>
 						</Form.Group>
-						<Form.Group id="email">
-							<Form.Label>Email</Form.Label>
-							<Form.Control type="email" ref={emailRef} required/>
+						<Form.Group id="username">
+							<Form.Label>Username</Form.Label>
+							<Form.Control type="username" ref={usernameRef} required/>
 						</Form.Group>
 						<Form.Group id="password">
 							<Form.Label>Password</Form.Label>
