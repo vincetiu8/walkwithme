@@ -1,12 +1,16 @@
 import React, {useState} from "react"
-import {Alert, Button, Card} from "react-bootstrap"
+import {Alert, Button, Card, Form} from "react-bootstrap"
 import {useAuth} from "../contexts/AuthContext"
 import {Link, useHistory} from "react-router-dom"
+import Header from "./Header"
 
 export default function Dashboard() {
 	const [error, setError] = useState("")
 	const {currentUser, logout} = useAuth()
 	const history = useHistory()
+
+	// Get user specific walking data
+
 
 	async function handleLogout() {
 		setError("")
@@ -19,39 +23,22 @@ export default function Dashboard() {
 	}
 
 	return (
-		<>
+		<div className="mainpage">
+			<Header />
+			{/* Have MULTIPLE cards over here */}
 			<Card>
+				<Card.Img variant="top" src="" />
 				<Card.Body>
-					<div className="container">
-						<div className="row">
-							<div className="col">
-								<h2 className="text-center mb-4">Profile</h2>
-								{error && <Alert variant="danger">{error}</Alert>}
-							</div>
-						</div>
-						<div className="row">
-							<div className="col text-center mb-2">
-								<img alt="profile" src={currentUser.photoURL} className="img-thumbnail" style={{"width": "200px", "height": "200px", "objectFit": "cover"}}/>
-							</div>
-						</div>
-						<div className="row">
-							<div className="col">
-								<strong>Name:</strong> {currentUser.displayName}
-							</div>
-						</div>
-						<div className="row">
-							<div className="col">
-								<strong>Email:</strong> {currentUser.email}
-							</div>
-						</div>
-						<div className="row">
-							<div className="col">
-								<Link to="/update-profile" className="btn btn-primary w-100 mt-3">
-									Update Profile
-								</Link>
-							</div>
-						</div>
-					</div>
+					<Card.Title>Trip With John Smith</Card.Title>
+					<Card.Text>On Dec 7 1969 at 4:20pm</Card.Text>
+				</Card.Body>
+			</Card>
+
+			<Card>
+				<Card.Img variant="top" src="" />
+				<Card.Body>
+					<Card.Title>Trip With John Smith</Card.Title>
+					<Card.Text>On Dec 7 1969 at 4:20pm</Card.Text>
 				</Card.Body>
 			</Card>
 			<div className="w-100 text-center mt-2">
@@ -59,6 +46,6 @@ export default function Dashboard() {
 					Log Out
 				</Button>
 			</div>
-		</>
+		</div>
 	)
 }

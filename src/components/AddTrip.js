@@ -1,8 +1,9 @@
 import React, {useRef, useState} from "react";
 import {Form, Button, Card, Alert} from "react-bootstrap";
 import Header from './Header';
+import {Link} from "react-router-dom";
 
-function MainPage() {
+function AddTrip() {
 
     const timeRef = useRef()
     const dateRef = useRef()
@@ -10,16 +11,16 @@ function MainPage() {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        try {
-            // Write to database
-            const data = {
-                time: timeRef.current.value,
-                date: dateRef.current.value
-            };
-        } catch (event) {
-            console.log(event)
-        }
-
+        // Write to database
+        const jsonData = {
+            time: timeRef.current.value,
+            date: dateRef.current.value
+        };
+        
+        fetch('http://placeholder', {
+            method: 'POST',
+            body: JSON.stringify(jsonData)
+        })
 
     }
 
@@ -48,10 +49,18 @@ function MainPage() {
                 <Button type="Submit">
                     Submit
                 </Button>
+
+                <div className="col">
+								<Link to="/" className="btn btn-primary w-100 mt-3">
+									Back to Home
+								</Link>
+							</div>
+
+
                 </Card.Body>
             </Card>
         </div>        
     )
 }
 
-export default MainPage
+export default AddTrip

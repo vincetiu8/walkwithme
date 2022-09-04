@@ -8,7 +8,8 @@ import Login from "./Login"
 import PrivateRoute from "./PrivateRoute"
 import ForgotPassword from "./ForgotPassword"
 import UpdateProfile from "./UpdateProfile"
-import MainPage from "./MainPage"
+import AddTrip from "./AddTrip"
+import MyProfile from "./MyProfile"
 
 function App() {
   return (
@@ -21,11 +22,12 @@ function App() {
           <AuthProvider>
             <Switch>
               <PrivateRoute exact path="/" component={Dashboard} />
+              <PrivateRoute path="/add-trip" component={AddTrip} />
+              <PrivateRoute path="/my-profile" component={MyProfile} />
               <PrivateRoute path="/update-profile" component={UpdateProfile} />
               <Route path="/signup" component={Signup} />
               <Route path="/login" component={Login} />
               <Route path="/forgot-password" component={ForgotPassword} />
-              <Route path="/mainpage" component={MainPage} />
             </Switch>
           </AuthProvider>
         </Router>
