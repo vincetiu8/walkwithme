@@ -10,6 +10,7 @@ import ForgotPassword from "./ForgotPassword"
 import UpdateProfile from "./UpdateProfile"
 import AddTrip from "./AddTrip"
 import MyProfile from "./MyProfile"
+import AutoComplete from "./AutoComplete"
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/signup" component={Signup} />
               <Route path="/login" component={Login} />
               <Route path="/forgot-password" component={ForgotPassword} />
+              <Route path="/autocomplete" component={AutoComplete} />
             </Switch>
           </AuthProvider>
         </Router>
