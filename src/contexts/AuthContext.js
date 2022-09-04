@@ -17,7 +17,7 @@ export function AuthProvider({children}) {
 
 		return uploadBytes(imageRef, photo).then(() => {
 			getDownloadURL(imageRef).then((url) => {
-				axios.post(`http://${baseUrl}/accounts/create`, {
+				axios.post(`https://${baseUrl}/accounts/create`, {
 					username: username,
 					password: password,
 					name: name,
@@ -31,7 +31,7 @@ export function AuthProvider({children}) {
 	}
 
 	function login(username, password) {
-		return axios.post(`http://${baseUrl}/accounts/login`, {
+		return axios.post(`https://${baseUrl}/accounts/login`, {
 			username: username,
 			password: password
 		}).then((response) => {
@@ -40,7 +40,7 @@ export function AuthProvider({children}) {
 	}
 
 	function updateUserName(displayName) {
-		return axios.put(`http://${baseUrl}/accounts/username`, {
+		return axios.put(`https://${baseUrl}/accounts/username`, {
 			username: currentUser.username,
 			new_username: displayName
 		}).then((response) => {
@@ -52,7 +52,7 @@ export function AuthProvider({children}) {
 	}
 
 	function updateUserPassword(password) {
-		return axios.put(`http://${baseUrl}/accounts/password`, {
+		return axios.put(`https://${baseUrl}/accounts/password`, {
 			username: currentUser.username,
 			new_password: password
 		}).then((response) => {
@@ -64,7 +64,7 @@ export function AuthProvider({children}) {
 	}
 
 	function updateName(name) {
-		return axios.put(`http://${baseUrl}/accounts/name`, {
+		return axios.put(`https://${baseUrl}/accounts/name`, {
 			username: currentUser.username,
 			new_name: name
 		}).then((response) => {

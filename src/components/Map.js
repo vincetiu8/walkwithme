@@ -47,7 +47,7 @@ function Map() {
 
 		let orig = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${origin}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
 		let dest = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${destination}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
-		let res = await axios.post(`http://${baseUrl}/search/registerplan`, {
+		let res = await axios.post(`https://${baseUrl}/search/registerplan`, {
 			username: currentUser.username,
 			path: {
 				start_location: orig.data.results[0].geometry.location,
@@ -60,7 +60,7 @@ function Map() {
 		let medianPoints = null
 		while (searching) {
 			try {
-				res = await axios.post(`http://${baseUrl}/search/findpartner`, {
+				res = await axios.post(`https://${baseUrl}/search/findpartner`, {
 					username: currentUser.username
 				})
 				console.log(res)
