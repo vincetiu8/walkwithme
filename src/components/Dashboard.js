@@ -9,7 +9,7 @@ export default function Dashboard() {
 	const {currentUser, logout} = useAuth()
 	const history = useHistory()
 
-	const directionsService = new google.maps.DirectionsService()
+	const directionsService = new window.google.maps.DirectionsService()
 	directionsService.route()
 
 	async function handleLogout() {
