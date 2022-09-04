@@ -16,3 +16,5 @@ export const storage = getStorage(app)
 export const auth = getAuth(app)
 
 export default app
+
+export const baseUrl = "localhost:8080"

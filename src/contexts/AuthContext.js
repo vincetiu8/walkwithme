@@ -1,15 +1,7 @@
 import React, {useContext, useEffect, useState} from "react"
-import {
-	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword,
-	signOut,
-	updateProfile,
-	sendPasswordResetEmail,
-	updateEmail,
-	updatePassword
-} from "firebase/auth"
-import {auth, storage} from "../firebase"
+import {baseUrl, storage} from "../firebase"
 import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import axios from "axios";
 
 const AuthContext = React.createContext()
 
@@ -18,71 +10,88 @@ export function useAuth() {
 }
 
 export function AuthProvider({children}) {
-	const [currentUser, setCurrentUser] = useState()
-	const [loading, setLoading] = useState(true)
+	const [currentUser, setCurrentUser] = useState(null)
 
-	function signup(email, password) {
-		return createUserWithEmailAndPassword(auth, email, password)
-	}
-
-	function login(email, password) {
-		return signInWithEmailAndPassword(auth, email, password)
-	}
-
-	function logout() {
-		return signOut(auth)
-	}
-
-	function resetPassword(email) {
-		return sendPasswordResetEmail(auth, email)
-	}
-
-	function updateUserImage(photo) {
-		const imageRef = ref(storage, `images/${auth.currentUser.uid}`)
+	function signup(username, password, name, photo) {
+		const imageRef = ref(storage, `images/${username}`)
 
 		return uploadBytes(imageRef, photo).then(() => {
 			getDownloadURL(imageRef).then((url) => {
-				updateProfile(auth.currentUser, {photoURL: url})
+				axios.post(`http://${baseUrl}/accounts/create`, {
+					username: username,
+					password: password,
+					name: name,
+					photo_url: url
+				}).then((response) => {
+					console.log(response.data)
+					setCurrentUser(response.data)
+				})
 			})
 		})
 	}
 
-	function updateUserName(displayName) {
-		return updateProfile(auth.currentUser, {
-			displayName: displayName
+	function login(username, password) {
+		return axios.post(`http://${baseUrl}/accounts/login`, {
+			username: username,
+			password: password
+		}).then((response) => {
+			setCurrentUser(response.data)
 		})
 	}
 
-	function updateUserEmail(email) {
-		return updateEmail(auth.currentUser, email)
+	function updateUserName(displayName) {
+		return axios.put(`http://${baseUrl}/accounts/username`, {
+			username: currentUser.username,
+			new_username: displayName
+		}).then((response) => {
+			setCurrentUser({
+				...currentUser,
+				username: displayName
+			})
+		})
 	}
 
 	function updateUserPassword(password) {
-		return updatePassword(auth.currentUser, password)
+		return axios.put(`http://${baseUrl}/accounts/password`, {
+			username: currentUser.username,
+			new_password: password
+		}).then((response) => {
+			setCurrentUser({
+				...currentUser,
+				password: password
+			})
+		})
 	}
 
-	useEffect(() => {
-		return auth.onAuthStateChanged(user => {
-			setCurrentUser(user)
-			setLoading(false)
+	function updateName(name) {
+		return axios.put(`http://${baseUrl}/accounts/name`, {
+			username: currentUser.username,
+			new_name: name
+		}).then((response) => {
+			setCurrentUser({
+				...currentUser,
+				name: name
+			})
 		})
-	}, [])
+	}
+
+	function logout() {
+		return setCurrentUser(null)
+	}
 
 	const value = {
 		currentUser,
 		login,
 		signup,
-		logout,
-		resetPassword,
-		updateUserImage,
 		updateUserName,
-		updateUserEmail,
-		updateUserPassword
+		updateUserPassword,
+		updateName,
+		logout
 	}
 
 	return (
 		<AuthContext.Provider value={value}>
-			{!loading && children}
+			{children}
 		</AuthContext.Provider>
 	)
 }
