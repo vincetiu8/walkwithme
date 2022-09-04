@@ -1,14 +1,16 @@
-import React, {useRef, useEffect} from "react";
-import {Form, Button, Card} from "react-bootstrap";
+import React, {useRef, useState, useEffect} from "react";
+import {Form, Button, Card, Alert} from "react-bootstrap";
 import Header from './Header';
 import {Link} from "react-router-dom";
 
 function AddTrip() {
 
+    
     const timeRef = useRef()
     const dateRef = useRef()
     const inputRef = useRef()
 
+    
     const handleSubmit = (event) => {
         event.preventDefault()
 
@@ -64,30 +66,37 @@ function AddTrip() {
                 <Card.Header as="h5"> Add Journey</Card.Header>
                 <Card.Body>
                     <Card.Title>Select time and date for your journey</Card.Title>
-                    <Form onSubmit={handleSubmit}>
+                    <Form>
                         <Form.Group controlId="formEnterTime">
                             <Form.Control className = "m1" type="time" name="time" ref={timeRef}/>
                             <Form.Control className = "m1" type="date" name="date" ref={dateRef}/>
                         </Form.Group>
                     </Form>
 
-                    <Card.Title>Select Location</Card.Title>
+                    {/* <Card.Title>Select Starting Location</Card.Title>
+                    <Form>
+                        <Form.Group controlId="formEnterLocation">
+                            <AutoComplete/>
+                        </Form.Group>
+                    </Form> */}
+
+                    <Card.Title>Select Destination</Card.Title>
                     <Form>
                         <Form.Group controlId="formEnterLocation">
                             <AutoComplete/>
                         </Form.Group>
                     </Form>
 
-
-                <Button type="Submit">
+                {/* <AlertDismissible /> */}
+                <Button type="Submit" onSubmit={handleSubmit}>
                     Submit
                 </Button>
 
                 <div className="col">
-								<Link to="/" className="btn btn-primary w-100 mt-3">
-									Back to Home
-								</Link>
-							</div>
+                    <Link to="/" className="btn btn-primary w-100 mt-3">
+                        Back to Home
+                    </Link>
+                </div>
 
 
                 </Card.Body>
