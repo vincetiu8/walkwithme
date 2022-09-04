@@ -1,5 +1,5 @@
 /*global google*/
-import React, {Component, useRef} from "react";
+import React, {Component, useRef, useEffect} from "react";
 import {
 	withGoogleMap,
 	withScriptjs,
@@ -101,6 +101,57 @@ function Map() {
 		</GoogleMap>
 	));
 
+	// Autocomplete feature
+    const AutoCompleteStart = () => {
+        const autoCompleteRef = useRef();
+
+    
+        const options = {
+        componentRestrictions: { country: "us" },
+        fields: ["address_components", "geometry", "icon", "name"],
+        types: ["establishment"]
+        };
+    
+        useEffect(() => {
+            autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+             startLat.current,
+             options
+            );
+            autoCompleteRef.current.addListener("place_changed", async function () {
+             const place = await autoCompleteRef.current.getPlace();
+             console.log({ place });
+            });
+           });
+           return (
+				<Form.Control type="text" placeholder="Enter Starting Point" ref={startLat}/>
+           );
+          };
+
+		  const AutoCompleteEnd = () => {
+			const autoCompleteRef = useRef();
+	
+		
+			const options = {
+			componentRestrictions: { country: "us" },
+			fields: ["address_components", "geometry", "icon", "name"],
+			types: ["establishment"]
+			};
+		
+			useEffect(() => {
+				autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+				 endLat.current,
+				 options
+				);
+				autoCompleteRef.current.addListener("place_changed", async function () {
+				 const place = await autoCompleteRef.current.getPlace();
+				 console.log({ place });
+				});
+			   });
+			   return (
+					<Form.Control type="text" placeholder="Enter Starting Point" ref={endLat}/>
+			   );
+			  };
+
 	return (
 		<div>
 			<GoogleMapExample
@@ -110,11 +161,11 @@ function Map() {
 			<Form onSubmit={onCoordinateSubmit}>
 				<Form.Group controlId="formOriginLocation">
 					<Form.Label>Origin Location</Form.Label>
-					<Form.Control type="text" placeholder="Enter Starting Point" ref={startLat}/>
+					<AutoCompleteStart />
 				</Form.Group>
 				<Form.Group controlId="formEndingLocation">
 					<Form.Label>Ending Location</Form.Label>
-					<Form.Control type="text" placeholder="Enter Ending Point" ref={endLat}/>
+					<AutoCompleteEnd />
 				</Form.Group>
 
 				<Form.Group controlId="formSubmit">

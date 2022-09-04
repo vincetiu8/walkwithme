@@ -17,4 +17,4 @@ export const auth = getAuth(app)
 
 export default app
 
-export const baseUrl = "localhost:8080"
+export const baseUrl = "35.193.243.146:8080"
