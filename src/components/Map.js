@@ -10,12 +10,15 @@ import {Form} from "react-bootstrap";
 import axios from "axios";
 import {baseUrl} from "../firebase";
 import {useAuth} from "../contexts/AuthContext";
+import Header from "./Header";
+import {TextField} from "@mui/material";
 
 function Map() {
 	const [directions, setDirections] = React.useState(null);
 	const startLat = useRef()
 	const endLat = useRef()
 	const {currentUser} = useAuth()
+	const [otherUser, setOtherUser] = React.useState(null)
 
 	const directionsService = new google.maps.DirectionsService();
 
@@ -26,6 +29,7 @@ function Map() {
 	const onCoordinateSubmit = async (event) => {
 		event.preventDefault()
 
+		setOtherUser(null)
 		const origin = startLat.current.value
 		const destination = endLat.current.value
 
@@ -62,14 +66,16 @@ function Map() {
 				console.log(res)
 				if (res.status === 200) {
 					searching = false
-					medianPoints = res.data
+					medianPoints = res.data.path
+					setOtherUser(res.data.user1 === currentUser.username ? res.data.user2 : res.data.user1)
+
 					break
 				}
 			} catch {
 
 			}
 
-			await sleep(15000)
+			await sleep(5000)
 		}
 
 		// let orig2 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${medianPoints.start_location.lat + "," + medianPoints.start_location.lng}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
@@ -103,6 +109,9 @@ function Map() {
 
 	return (
 		<div>
+			{
+				otherUser ? <h1>You're walking with {otherUser}!</h1> : ""
+			}
 			<GoogleMapExample
 				containerElement={<div style={{height: `500px`, width: "500px"}}/>}
 				mapElement={<div style={{height: `100%`}}/>}
