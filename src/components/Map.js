@@ -6,27 +6,22 @@ function initMap() {
 		center: {lat: 41.85, lng: -87.65},
 	});
 	directionsRenderer.setMap(map);
-	document.getElementById("submit").addEventListener("click", function () {
-		calculateAndDisplayRoute(directionsService, directionsRenderer);
-	});
 }
 
-function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+function calculateAndDisplayRoute(directionsService, directionsRenderer, start, end, wps) {
 	var waypts = [];
-	var wp1 = document.getElementById("wp1");
 	waypts.push({
-		location: (wp1).value,
+		location: (wps[0]).value,
 		stopover: true,
 	});
-	var wp2 = document.getElementById("wp2");
 	waypts.push({
-		location: (wp2).value,
+		location: (wps[1]).value,
 		stopover: true,
 	});
 	directionsService
 		.route({
-			origin: document.getElementById("start").value,
-			destination: document.getElementById("end").value,
+			origin: start,
+			destination: end,
 			waypoints: waypts,
 			optimizeWaypoints: true,
 			travelMode: window.google.maps.TravelMode.DRIVING,
@@ -47,8 +42,8 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
 			}
 		})
 		.catch(function (e) {
-			return window.alert("Directions request failed due to " + status);
+			return "L";
 		});
 }
 
-window.initMap = initMap;
+export{initMap, calculateAndDisplayRoute}

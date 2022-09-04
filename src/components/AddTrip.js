@@ -2,15 +2,17 @@ import React, {useRef, useState} from "react";
 import {Form, Button, Card, Alert} from "react-bootstrap";
 import Header from './Header';
 import {Link} from "react-router-dom";
+import {initMap, calculateAndDisplayRoute} from "./Map.js"
 
 function AddTrip() {
 
     const timeRef = useRef()
     const dateRef = useRef()
+    initMap()
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
+        
         // Write to database
         const jsonData = {
             time: timeRef.current.value,
@@ -49,7 +51,6 @@ function AddTrip() {
                 <Button type="Submit">
                     Submit
                 </Button>
-
                 <div className="col">
 								<Link to="/" className="btn btn-primary w-100 mt-3">
 									Back to Home
