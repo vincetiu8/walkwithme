@@ -1,24 +1,21 @@
-import React, {useRef, useState} from "react";
-import {Form, Button, Card, Alert} from "react-bootstrap";
-import Header from './Header';
-import {Link} from "react-router-dom";
-import {initMap, calculateAndDisplayRoute} from "./Map.js"
+import React, {useRef} from "react";
+import Map from './Map';
+import { withScriptjs } from "react-google-maps";
+
 
 function AddTrip() {
-
     const timeRef = useRef()
     const dateRef = useRef()
-    initMap()
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        
+
         // Write to database
         const jsonData = {
             time: timeRef.current.value,
             date: dateRef.current.value
         };
-        
+
         fetch('http://placeholder', {
             method: 'POST',
             body: JSON.stringify(jsonData)
@@ -26,41 +23,15 @@ function AddTrip() {
 
     }
 
+    const MapLoader = withScriptjs(Map);
+
     return (
         <div className="mainpage">
-            <Header />
-
-            <Card>
-                <Card.Header as="h5"> Add Journey</Card.Header>
-                <Card.Body>
-                    <Card.Title>Select time and date for your journey</Card.Title>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="formEnterTime">
-                            <Form.Control type="time" name="time" ref={timeRef}/>
-                            <Form.Control type="date" name="date" ref={dateRef}/>
-                        </Form.Group>
-                    </Form>
-
-                    <Card.Title>Select Location</Card.Title>
-                    <Form>
-                        <Form.Group controlId="formEnterLocation">
-
-                        </Form.Group>
-                    </Form>
-
-                <Button type="Submit">
-                    Submit
-                </Button>
-                <div className="col">
-								<Link to="/" className="btn btn-primary w-100 mt-3">
-									Back to Home
-								</Link>
-							</div>
-
-
-                </Card.Body>
-            </Card>
-        </div>        
+            <MapLoader
+                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0"
+                loadingElement={<div style={{ height: `100%` }} />}
+            />
+        </div>
     )
 }
 

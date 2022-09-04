@@ -1,49 +1,129 @@
-function initMap() {
-	var directionsService = new window.google.maps.DirectionsService();
-	var directionsRenderer = new window.google.maps.DirectionsRenderer();
-	var map = new window.google.maps.Map(document.getElementById("map"), {
-		zoom: 6,
-		center: {lat: 41.85, lng: -87.65},
-	});
-	directionsRenderer.setMap(map);
-}
+/*global google*/
+import React, {Component, useRef} from "react";
+import {
+	withGoogleMap,
+	withScriptjs,
+	GoogleMap,
+	DirectionsRenderer
+} from "react-google-maps";
+import {Form} from "react-bootstrap";
+import axios from "axios";
+import {baseUrl} from "../firebase";
+import {useAuth} from "../contexts/AuthContext";
 
-function calculateAndDisplayRoute(directionsService, directionsRenderer, start, end, wps) {
-	var waypts = [];
-	waypts.push({
-		location: (wps[0]).value,
-		stopover: true,
-	});
-	waypts.push({
-		location: (wps[1]).value,
-		stopover: true,
-	});
-	directionsService
-		.route({
-			origin: start,
-			destination: end,
-			waypoints: waypts,
-			optimizeWaypoints: true,
-			travelMode: window.google.maps.TravelMode.DRIVING,
-		})
-		.then(function (response) {
-			directionsRenderer.setDirections(response);
-			var route = response.routes[0];
-			var summaryPanel = document.getElementById("directions-panel");
-			summaryPanel.innerHTML = "";
-			// For each route, display summary information.
-			for (var i = 0; i < route.legs.length; i++) {
-				var routeSegment = i + 1;
-				summaryPanel.innerHTML +=
-					"<b>Route Segment: " + routeSegment + "</b><br>";
-				summaryPanel.innerHTML += route.legs[i].start_address + " to ";
-				summaryPanel.innerHTML += route.legs[i].end_address + "<br>";
-				summaryPanel.innerHTML += route.legs[i].distance.text + "<br><br>";
+function Map() {
+	const [directions, setDirections] = React.useState(null);
+	const startLat = useRef()
+	const endLat = useRef()
+	const {currentUser} = useAuth()
+
+	const directionsService = new google.maps.DirectionsService();
+
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	const onCoordinateSubmit = async (event) => {
+		event.preventDefault()
+
+		const origin = startLat.current.value
+		const destination = endLat.current.value
+
+		let result = await directionsService.route(
+			{
+				origin: origin,
+				destination: destination,
+				travelMode: google.maps.TravelMode.WALKING
+			})
+		if (result) {
+			setDirections(result)
+		} else {
+			console.error(`error fetching directions ${result}`);
+		}
+
+		let orig = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${origin}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
+		let dest = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${destination}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
+		let res = await axios.post(`http://${baseUrl}/search/registerplan`, {
+			username: currentUser.username,
+			path: {
+				start_location: orig.data.results[0].geometry.location,
+				end_location: dest.data.results[0].geometry.location
 			}
 		})
-		.catch(function (e) {
-			return "L";
-		});
+
+		console.log(res)
+		let searching = true
+		let medianPoints = null
+		while (searching) {
+			try {
+				res = await axios.post(`http://${baseUrl}/search/findpartner`, {
+					username: currentUser.username
+				})
+				console.log(res)
+				if (res.status === 200) {
+					searching = false
+					medianPoints = res.data
+					break
+				}
+			} catch {
+
+			}
+
+			await sleep(15000)
+		}
+
+		let orig2 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${medianPoints.start_location.lat + "," + medianPoints.start_location.lng}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
+		let dest2 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${medianPoints.end_location.lat + "," + medianPoints.end_location.lng}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
+
+		const wpts = [{location: orig2.data.results[0].formatted_address, stopover: true}, {location: dest2.data.results[0].formatted_address, stopover: true}]
+		console.log(wpts)
+
+		let new_result = await directionsService.route(
+			{
+				origin: origin,
+				destination: destination,
+				waypoints: wpts,
+				travelMode: google.maps.TravelMode.WALKING
+			})
+		if (new_result) {
+			setDirections(new_result)
+		} else {
+			console.error(`error fetching directions ${new_result}`);
+		}
+	}
+
+	const GoogleMapExample = withGoogleMap(props => (
+		<GoogleMap
+			defaultCenter={{lat: 40.756795, lng: -73.954298}}
+			defaultZoom={13}
+		>
+			{directions && <DirectionsRenderer directions={directions}/>}
+		</GoogleMap>
+	));
+
+	return (
+		<div>
+			<GoogleMapExample
+				containerElement={<div style={{height: `500px`, width: "500px"}}/>}
+				mapElement={<div style={{height: `100%`}}/>}
+			/>
+			<Form onSubmit={onCoordinateSubmit}>
+				<Form.Group controlId="formOriginLocation">
+					<Form.Label>Origin Location</Form.Label>
+					<Form.Control type="text" placeholder="Enter Starting Point" ref={startLat}/>
+				</Form.Group>
+				<Form.Group controlId="formEndingLocation">
+					<Form.Label>Ending Location</Form.Label>
+					<Form.Control type="text" placeholder="Enter Ending Point" ref={endLat}/>
+				</Form.Group>
+
+				<Form.Group controlId="formSubmit">
+					<Form.Label>Submit</Form.Label>
+					<Form.Control type="submit"/>
+				</Form.Group>
+			</Form>
+		</div>
+	);
 }
 
-export{initMap, calculateAndDisplayRoute}
+export default Map;
