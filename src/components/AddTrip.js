@@ -73,13 +73,6 @@ function AddTrip() {
                         </Form.Group>
                     </Form>
 
-                    {/* <Card.Title>Select Starting Location</Card.Title>
-                    <Form>
-                        <Form.Group controlId="formEnterLocation">
-                            <AutoComplete/>
-                        </Form.Group>
-                    </Form> */}
-
                     <Card.Title>Select Destination</Card.Title>
                     <Form>
                         <Form.Group controlId="formEnterLocation">
