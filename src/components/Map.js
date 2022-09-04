@@ -72,10 +72,10 @@ function Map() {
 			await sleep(15000)
 		}
 
-		let orig2 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${medianPoints.start_location.lat + "," + medianPoints.start_location.lng}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
-		let dest2 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${medianPoints.end_location.lat + "," + medianPoints.end_location.lng}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
+		// let orig2 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${medianPoints.start_location.lat + "," + medianPoints.start_location.lng}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
+		// let dest2 = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${medianPoints.end_location.lat + "," + medianPoints.end_location.lng}&key=AIzaSyBbp2hrU3Jw2fXd9zHGsz8CaFozb7XKgV0`)
 
-		const wpts = [{location: orig2.data.results[0].formatted_address, stopover: true}, {location: dest2.data.results[0].formatted_address, stopover: true}]
+		const wpts = [{location: medianPoints.start_location.lat + "," + medianPoints.start_location.lng, stopover: true}, {location: medianPoints.end_location.lat + "," + medianPoints.end_location.lng, stopover: true}]
 		console.log(wpts)
 
 		let new_result = await directionsService.route(
